@@ -2,16 +2,16 @@ services:
     backend:
         build: ./backend
         ports:
-            - '5000:5000'
+            - '5001:5000'
         environment:
             - MONGODB_URI=mongodb://mongodb:27017/job-hunter
             - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
             - NODE_ENV=development
         depends_on:
             - mongodb
-        volumes:
-            - ./backend:/app
-            - /app/node_modules
+        # volumes:
+        #     - ./backend:/app
+        #     - /app/node_modules
 
     frontend:
         build: ./frontend
@@ -19,9 +19,9 @@ services:
             - '3000:3000'
         environment:
             - NEXT_PUBLIC_API_URL=http://localhost:5000
-        volumes:
-            - ./frontend:/app
-            - /app/node_modules
+        # volumes:
+        #     - ./frontend:/app
+        #     - /app/node_modules
         depends_on:
             - backend
 

@@ -1,40 +1,44 @@
-# Dependencies
+# Node
 node_modules/
-.pnp/
-.pnp.js
-
-# Testing
-coverage/
-
-# Next.js
-.next/
-out/
-build/
-dist/
-
-# Production
-build/
-dist/
-
-# Misc
-.DS_Store
-*.pem
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Debug
+**/node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+# Build output
+dist/
+build/
+.next/
+coverage/
+
+# Environment variables
+.env
+.env.*
 
 # Docker
-.docker/
+*.local
+Dockerfile*
+docker-compose*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Misc
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Dependency directories
+backend/node_modules/
+frontend/node_modules/
+
+# Output directories
+backend/dist/
+frontend/.next/
+frontend/out/
