@@ -1,7 +1,12 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import { User } from '../models/User';
+import { User, IUser } from '../models/User';
+
+// Extend the Request interface to include user
+interface AuthenticatedRequest extends Request {
+    user?: IUser;
+}
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -70,10 +75,19 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-export const changePassword = async (req: Request, res: Response) => {
+export const changePassword = async (
+    req: AuthenticatedRequest,
+    res: Response
+) => {
     try {
         const { currentPassword, newPassword } = req.body;
         const userId = req.user?._id;
+
+        if (!userId) {
+            return res
+                .status(401)
+                .json({ error: 'User not authenticated' });
+        }
 
         const user = await User.findById(userId);
         if (!user) {
@@ -98,10 +112,19 @@ export const changePassword = async (req: Request, res: Response) => {
     }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (
+    req: AuthenticatedRequest,
+    res: Response
+) => {
     try {
         const { name, email } = req.body;
-        const userId = req.user?._id; // Assuming auth middleware sets req.user
+        const userId = req.user?._id;
+
+        if (!userId) {
+            return res
+                .status(401)
+                .json({ error: 'User not authenticated' });
+        }
 
         const user = await User.findById(userId);
         if (!user) {
