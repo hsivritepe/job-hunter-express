@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { getErrorMessage } from '@/lib/errorMessages';
 
 interface LoginForm {
     email: string;
@@ -72,7 +73,9 @@ export default function LoginPage() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Login failed');
+                throw new Error(
+                    data.error || data.message || 'Login failed'
+                );
             }
 
             // Store token in localStorage
@@ -82,11 +85,11 @@ export default function LoginPage() {
             // Redirect to dashboard or home
             router.push('/dashboard');
         } catch (error) {
-            setApiError(
+            const errorMessage =
                 error instanceof Error
                     ? error.message
-                    : 'Login failed'
-            );
+                    : 'Login failed';
+            setApiError(getErrorMessage(errorMessage));
         } finally {
             setLoading(false);
         }

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { getErrorMessage } from '@/lib/errorMessages';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
@@ -43,17 +44,19 @@ export default function ForgotPasswordPage() {
 
             if (!response.ok) {
                 throw new Error(
-                    data.message || 'Failed to send reset email'
+                    data.error ||
+                        data.message ||
+                        'Failed to send reset email'
                 );
             }
 
             setSuccess(true);
         } catch (error) {
-            setError(
+            const errorMessage =
                 error instanceof Error
                     ? error.message
-                    : 'Failed to send reset email'
-            );
+                    : 'Failed to send reset email';
+            setError(getErrorMessage(errorMessage));
         } finally {
             setLoading(false);
         }
