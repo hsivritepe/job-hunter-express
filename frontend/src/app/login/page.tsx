@@ -6,19 +6,17 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { getErrorMessage } from '@/lib/errorMessages';
-
-interface LoginForm {
-    email: string;
-    password: string;
-}
+import { LoginCredentials } from '@/types';
 
 export default function LoginPage() {
     const router = useRouter();
-    const [formData, setFormData] = useState<LoginForm>({
+    const [formData, setFormData] = useState<LoginCredentials>({
         email: '',
         password: '',
     });
-    const [errors, setErrors] = useState<Partial<LoginForm>>({});
+    const [errors, setErrors] = useState<Partial<LoginCredentials>>(
+        {}
+    );
     const [loading, setLoading] = useState(false);
     const [apiError, setApiError] = useState('');
 
@@ -26,13 +24,13 @@ export default function LoginPage() {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
         // Clear error when user starts typing
-        if (errors[name as keyof LoginForm]) {
+        if (errors[name as keyof LoginCredentials]) {
             setErrors((prev) => ({ ...prev, [name]: '' }));
         }
     };
 
     const validateForm = (): boolean => {
-        const newErrors: Partial<LoginForm> = {};
+        const newErrors: Partial<LoginCredentials> = {};
 
         if (!formData.email) {
             newErrors.email = 'Email is required';
