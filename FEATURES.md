@@ -92,7 +92,7 @@
     -   [x] Password reset flow
     -   [ ] Email verification
 -   [x] User dashboard
-    -   [ ] Profile management
+    -   [x] Profile management
     -   [ ] Application overview and statistics
     -   [ ] Recent applications
     -   [ ] Upcoming interviews

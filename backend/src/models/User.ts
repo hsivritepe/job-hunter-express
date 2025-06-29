@@ -7,6 +7,15 @@ export interface IUser extends Document {
     name: string;
     resetToken?: string;
     resetTokenExpiry?: Date;
+    phone?: string;
+    location?: string;
+    bio?: string;
+    profilePicture?: string;
+    socialLinks?: {
+        linkedin?: string;
+        github?: string;
+        website?: string;
+    };
     createdAt: Date;
     updatedAt: Date;
     comparePassword(candidatePassword: string): Promise<boolean>;
@@ -36,6 +45,36 @@ const userSchema = new Schema<IUser>(
         },
         resetTokenExpiry: {
             type: Date,
+        },
+        phone: {
+            type: String,
+            trim: true,
+        },
+        location: {
+            type: String,
+            trim: true,
+        },
+        bio: {
+            type: String,
+            trim: true,
+            maxlength: 500,
+        },
+        profilePicture: {
+            type: String,
+        },
+        socialLinks: {
+            linkedin: {
+                type: String,
+                trim: true,
+            },
+            github: {
+                type: String,
+                trim: true,
+            },
+            website: {
+                type: String,
+                trim: true,
+            },
         },
     },
     {

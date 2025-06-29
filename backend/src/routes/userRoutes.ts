@@ -4,6 +4,7 @@ import {
     login,
     changePassword,
     updateUser,
+    updateProfile,
     forgotPassword,
     resetPassword,
 } from '../controllers/userController';
@@ -13,6 +14,7 @@ import {
     loginSchema,
     changePasswordSchema,
     updateUserSchema,
+    updateUserBasicSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
 } from '../validations/authValidation';
@@ -25,16 +27,22 @@ router.post('/register', validateRequest(registerSchema), register);
 router.post('/login', validateRequest(loginSchema), login);
 
 // Protected routes (require authentication)
-router.post(
+router.put(
     '/change-password',
     auth,
     validateRequest(changePasswordSchema),
     changePassword
 );
 router.put(
-    '/update',
+    '/profile',
     auth,
     validateRequest(updateUserSchema),
+    updateProfile
+);
+router.put(
+    '/update',
+    auth,
+    validateRequest(updateUserBasicSchema),
     updateUser
 );
 

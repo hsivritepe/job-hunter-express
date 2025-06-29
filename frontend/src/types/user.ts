@@ -4,11 +4,6 @@ export interface User {
     _id: string;
     name: string;
     email: string;
-    createdAt?: string;
-    updatedAt?: string;
-}
-
-export interface UserProfile extends User {
     phone?: string;
     location?: string;
     bio?: string;
@@ -18,6 +13,12 @@ export interface UserProfile extends User {
         github?: string;
         website?: string;
     };
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface UserProfile extends User {
+    // Additional profile fields can be added here if needed
 }
 
 export interface LoginCredentials {
@@ -29,6 +30,19 @@ export interface RegisterCredentials {
     name: string;
     email: string;
     password: string;
+}
+
+export interface UpdateProfileData {
+    name?: string;
+    phone?: string;
+    location?: string;
+    bio?: string;
+    profilePicture?: string;
+    socialLinks?: {
+        linkedin?: string;
+        github?: string;
+        website?: string;
+    };
 }
 
 export interface AuthResponse {

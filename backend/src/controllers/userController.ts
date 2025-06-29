@@ -91,14 +91,14 @@ export const changePassword = async (
 
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(400).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
-        // Verify current password
+        // Check current password
         const isMatch = await user.comparePassword(currentPassword);
         if (!isMatch) {
             return res
-                .status(401)
+                .status(400)
                 .json({ error: 'Current password is incorrect' });
         }
 
@@ -106,7 +106,7 @@ export const changePassword = async (
         user.password = newPassword;
         await user.save();
 
-        res.json({ message: 'Password updated successfully' });
+        res.json({ message: 'Password changed successfully' });
     } catch {
         res.status(400).json({ error: 'Error changing password' });
     }
@@ -152,6 +152,55 @@ export const updateUser = async (
     }
 };
 
+export const updateProfile = async (
+    req: AuthenticatedRequest,
+    res: Response
+) => {
+    try {
+        const {
+            name,
+            phone,
+            location,
+            bio,
+            profilePicture,
+            socialLinks,
+        } = req.body;
+        const userId = req.user?._id;
+
+        if (!userId) {
+            return res
+                .status(401)
+                .json({ error: 'User not authenticated' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Update profile fields
+        if (name) user.name = name;
+        if (phone !== undefined) user.phone = phone;
+        if (location !== undefined) user.location = location;
+        if (bio !== undefined) user.bio = bio;
+        if (profilePicture !== undefined)
+            user.profilePicture = profilePicture;
+        if (socialLinks) {
+            user.socialLinks = {
+                ...user.socialLinks,
+                ...socialLinks,
+            };
+        }
+
+        await user.save();
+
+        res.json({ user });
+    } catch (error) {
+        console.error('Profile update error:', error);
+        res.status(400).json({ error: 'Error updating profile' });
+    }
+};
+
 export const forgotPassword = async (req: Request, res: Response) => {
     try {
         const { email } = req.body;
@@ -163,17 +212,13 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
         // Generate reset token
         const resetToken = crypto.randomBytes(32).toString('hex');
-        const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
-
         user.resetToken = resetToken;
-        user.resetTokenExpiry = resetTokenExpiry;
+        user.resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
         await user.save();
 
-        // TODO: Send email with reset token
-        // For now, just return the token (in production, send via email)
         res.json({
             message: 'Password reset token generated',
-            resetToken, // Remove this in production
+            resetToken,
         });
     } catch (error) {
         res.status(400).json({
@@ -184,7 +229,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
 export const resetPassword = async (req: Request, res: Response) => {
     try {
-        const { token, newPassword } = req.body;
+        const { token, password } = req.body;
 
         const user = await User.findOne({
             resetToken: token,
@@ -198,12 +243,12 @@ export const resetPassword = async (req: Request, res: Response) => {
         }
 
         // Update password and clear reset token
-        user.password = newPassword;
+        user.password = password;
         user.resetToken = undefined;
         user.resetTokenExpiry = undefined;
         await user.save();
 
-        res.json({ message: 'Password reset successful' });
+        res.json({ message: 'Password reset successfully' });
     } catch (error) {
         res.status(400).json({ error: 'Error resetting password' });
     }

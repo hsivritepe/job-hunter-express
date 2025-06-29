@@ -5,6 +5,7 @@ export type {
     UserProfile,
     LoginCredentials,
     RegisterCredentials,
+    UpdateProfileData,
     AuthResponse,
     UserState,
     NavigationProps,

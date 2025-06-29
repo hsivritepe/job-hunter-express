@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { UpdateProfileData } from '@/types';
 
 const api = axios.create({
     baseURL:
@@ -36,6 +37,17 @@ export const auth = {
             email,
             password,
         });
+        return response.data;
+    },
+};
+
+export const profile = {
+    update: async (profileData: UpdateProfileData) => {
+        const response = await api.put('/users/profile', profileData);
+        return response.data;
+    },
+    get: async () => {
+        const response = await api.get('/users/profile');
         return response.data;
     },
 };
