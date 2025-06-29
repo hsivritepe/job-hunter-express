@@ -5,6 +5,7 @@ import {
     changePassword,
     updateUser,
     updateProfile,
+    getProfile,
     forgotPassword,
     resetPassword,
 } from '../controllers/userController';
@@ -33,6 +34,7 @@ router.put(
     validateRequest(changePasswordSchema),
     changePassword
 );
+router.get('/profile', auth, getProfile);
 router.put(
     '/profile',
     auth,

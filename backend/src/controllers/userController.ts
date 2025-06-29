@@ -201,6 +201,30 @@ export const updateProfile = async (
     }
 };
 
+export const getProfile = async (
+    req: AuthenticatedRequest,
+    res: Response
+) => {
+    try {
+        const userId = req.user?._id;
+        if (!userId) {
+            return res
+                .status(401)
+                .json({ error: 'User not authenticated' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ user });
+    } catch (error) {
+        console.error('Profile retrieval error:', error);
+        res.status(400).json({ error: 'Error retrieving profile' });
+    }
+};
+
 export const forgotPassword = async (req: Request, res: Response) => {
     try {
         const { email } = req.body;
