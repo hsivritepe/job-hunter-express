@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import Navigation from '@/components/Navigation';
 import Button from '@/components/Button';
 
 export default function ProfilePage() {
@@ -11,29 +12,7 @@ export default function ProfilePage() {
         <ProtectedRoute>
             <div className="min-h-screen bg-gray-50">
                 {/* Navigation */}
-                <nav className="bg-white shadow-sm border-b">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between h-16">
-                            <div className="flex items-center">
-                                <h1 className="text-xl font-bold text-gray-900">
-                                    Job Hunter
-                                </h1>
-                            </div>
-                            <div className="flex items-center space-x-4">
-                                <span className="text-sm text-gray-700">
-                                    Welcome, {user?.name}
-                                </span>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={logout}
-                                >
-                                    Sign out
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
+                <Navigation user={user!} onSignOut={logout} />
 
                 {/* Profile Content */}
                 <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

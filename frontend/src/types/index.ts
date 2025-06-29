@@ -7,4 +7,5 @@ export type {
     RegisterCredentials,
     AuthResponse,
     UserState,
+    NavigationProps,
 } from './user';

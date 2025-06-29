@@ -42,3 +42,8 @@ export interface UserState {
     loading: boolean;
     error: string | null;
 }
+
+export interface NavigationProps {
+    user: User;
+    logout: () => void;
+}
