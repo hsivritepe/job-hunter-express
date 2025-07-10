@@ -2,7 +2,6 @@ import request from 'supertest';
 import express from 'express';
 import { connectTestDB, clearTestDB, closeTestDB } from '../setup';
 import userRoutes from '../../routes/userRoutes';
-import { User } from '../../models/User';
 
 // Jest globals
 declare const describe: any;

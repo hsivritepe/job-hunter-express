@@ -58,3 +58,21 @@ export const createJob = async (
         });
     }
 };
+
+export const getJobs = async (
+    req: AuthenticatedRequest,
+    res: Response
+) => {
+    try {
+        const jobs = await Job.find({ userId: req.user?._id });
+        res.status(200).json({
+            message: 'Jobs fetched successfully',
+            jobs,
+        });
+    } catch (error: any) {
+        res.status(400).json({
+            message: 'Failed to get jobs',
+            error: error.message,
+        });
+    }
+};
