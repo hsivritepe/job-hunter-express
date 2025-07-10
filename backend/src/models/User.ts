@@ -1,23 +1,11 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { User as UserType } from '../types';
 
-export interface IUser extends Document {
-    email: string;
-    password: string;
-    name: string;
-    resetToken?: string;
-    resetTokenExpiry?: Date;
-    phone?: string;
-    location?: string;
-    bio?: string;
-    profilePicture?: string;
-    socialLinks?: {
-        linkedin?: string;
-        github?: string;
-        website?: string;
-    };
-    createdAt: Date;
-    updatedAt: Date;
+// Extend the User interface to include Mongoose Document methods and our custom methods
+export interface IUser
+    extends Omit<UserType, '_id' | 'createdAt' | 'updatedAt'>,
+        Document {
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
 

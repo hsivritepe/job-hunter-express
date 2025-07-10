@@ -1,10 +1,41 @@
+// Base user interface for general use
 export interface User {
-    _id: string;
+    _id?: string; // Make _id optional to avoid conflicts with Mongoose Document
     email: string;
     password: string;
     name: string;
+    resetToken?: string;
+    resetTokenExpiry?: Date;
+    phone?: string;
+    location?: string;
+    bio?: string;
+    profilePicture?: string;
+    socialLinks?: {
+        linkedin?: string;
+        github?: string;
+        website?: string;
+    };
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+// Interface for API responses (without password)
+export interface UserResponse
+    extends Omit<
+        User,
+        'password' | 'resetToken' | 'resetTokenExpiry'
+    > {
+    _id: string;
     createdAt: Date;
     updatedAt: Date;
+}
+
+// Interface for user input (when creating/updating users)
+export interface UserInput
+    extends Omit<User, '_id' | 'createdAt' | 'updatedAt'> {
+    email: string;
+    password: string;
+    name: string;
 }
 
 export interface Job {
