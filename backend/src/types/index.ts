@@ -39,7 +39,8 @@ export interface UserInput
 }
 
 export interface Job {
-    _id: string;
+    _id?: string;
+    userId: string; // Associate job with the user who created it
     title: string;
     company: string;
     location: string;
@@ -52,8 +53,8 @@ export interface Job {
     };
     type: 'full-time' | 'part-time' | 'contract' | 'internship';
     status: 'open' | 'closed';
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface Application {

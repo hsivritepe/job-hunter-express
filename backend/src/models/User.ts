@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 import { User as UserType } from '../types';
 
 // Extend the User interface to include Mongoose Document methods and our custom methods
