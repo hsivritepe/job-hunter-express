@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { getErrorMessage } from '@/lib/errorMessages';
-import { RegisterCredentials } from '@/types/user';
+import { RegisterCredentials } from '@/types';
 
 interface RegisterForm extends RegisterCredentials {
     confirmPassword: string;
