@@ -83,13 +83,15 @@ export default function DashboardPage() {
                                             Track your job
                                             applications
                                         </p>
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            className="w-full"
-                                        >
-                                            View Applications
-                                        </Button>
+                                        <Link href="/applications">
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="w-full"
+                                            >
+                                                View Applications
+                                            </Button>
+                                        </Link>
                                     </div>
 
                                     <div className="bg-white p-6 rounded-lg shadow-sm border">

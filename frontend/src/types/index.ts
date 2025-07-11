@@ -1,12 +1,2 @@
-// Export all types from this location
-
-export type {
-    User,
-    UserProfile,
-    LoginCredentials,
-    RegisterCredentials,
-    UpdateProfileData,
-    AuthResponse,
-    UserState,
-    NavigationProps,
-} from './user';
+// Re-export all types from shared package
+export * from '@job-hunter/shared-types';
