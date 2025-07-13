@@ -4,6 +4,10 @@ import dotenv from 'dotenv';
 // Load test environment variables
 dotenv.config({ path: '.env.test' });
 
+// Set test environment variables
+process.env.JWT_SECRET = 'test-jwt-secret-key';
+process.env.NODE_ENV = 'test';
+
 // Test database connection
 export const connectTestDB = async (): Promise<void> => {
     const testMongoUri =

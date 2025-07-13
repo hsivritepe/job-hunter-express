@@ -18,8 +18,12 @@ export const createJob = async (
             description,
             company,
             location,
+            appliedDate,
+            resumeLink,
+            jobPostingLink,
             salary,
             requirements,
+            notes,
             type,
             status,
         } = req.body;
@@ -39,8 +43,14 @@ export const createJob = async (
             description,
             company,
             location,
+            appliedDate: appliedDate
+                ? new Date(appliedDate)
+                : new Date(),
+            resumeLink,
+            jobPostingLink,
             salary,
             requirements: requirements || [],
+            notes,
             type: type || 'full-time',
             status: status || 'open',
         });

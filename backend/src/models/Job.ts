@@ -23,12 +23,27 @@ const jobSchema = new Schema<IJob>(
         },
         location: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
         },
         description: {
             type: String,
+            required: false,
+            trim: true,
+        },
+        appliedDate: {
+            type: Date,
             required: true,
+            default: Date.now,
+        },
+        resumeLink: {
+            type: String,
+            required: false,
+            trim: true,
+        },
+        jobPostingLink: {
+            type: String,
+            required: false,
             trim: true,
         },
         requirements: [
@@ -38,18 +53,14 @@ const jobSchema = new Schema<IJob>(
             },
         ],
         salary: {
-            min: {
-                type: Number,
-                required: false,
-            },
-            max: {
-                type: Number,
-                required: false,
-            },
-            currency: {
-                type: String,
-                default: 'USD',
-            },
+            type: String,
+            required: false,
+            trim: true,
+        },
+        notes: {
+            type: String,
+            required: false,
+            trim: true,
         },
         type: {
             type: String,

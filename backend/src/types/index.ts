@@ -44,16 +44,41 @@ export interface Job {
     userId: string;
     title: string;
     company: string;
-    location: string;
-    description: string;
+    location?: string;
+    description?: string;
+    appliedDate: Date;
+    resumeLink?: string;
+    jobPostingLink?: string;
     requirements: string[];
-    salary?: {
-        min: number;
-        max: number;
-        currency: string;
-    };
+    salary?: string;
+    notes?: string;
     type: 'full-time' | 'part-time' | 'contract' | 'internship';
     status: 'open' | 'closed';
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+// Action interface
+export interface Action {
+    _id?: string;
+    jobId: string;
+    userId: string;
+    type:
+        | 'follow-up'
+        | 'phone-interview'
+        | 'coding-interview'
+        | 'onsite-interview'
+        | 'offer'
+        | 'rejected'
+        | 'accepted'
+        | 'declined'
+        | 'withdrawn'
+        | 'other';
+    title: string;
+    description?: string;
+    date: Date;
+    status: 'pending' | 'completed' | 'cancelled';
+    notes?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

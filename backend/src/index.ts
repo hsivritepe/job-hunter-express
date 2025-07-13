@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import jobRoutes from './routes/jobRoutes';
+import actionRoutes from './routes/actionRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -31,6 +32,7 @@ mongoose
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/actions', actionRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

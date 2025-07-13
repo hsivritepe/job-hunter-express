@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Navigation from '@/components/Navigation';
@@ -222,9 +223,14 @@ export default function ApplicationsPage() {
                                                             }
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {
-                                                                job.title
-                                                            }
+                                                            <Link
+                                                                href={`/jobs/${job._id}`}
+                                                                className="text-blue-600 hover:text-blue-800 font-medium"
+                                                            >
+                                                                {
+                                                                    job.title
+                                                                }
+                                                            </Link>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                             {formatDate(
