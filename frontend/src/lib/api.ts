@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UpdateProfileData } from '@/types';
+import { UpdateProfileData, Job } from '@/types';
 
 const api = axios.create({
     baseURL:
@@ -52,17 +52,24 @@ export const profile = {
     },
 };
 
-export const jobs = {
-    getAll: async () => {
+export const jobAPI = {
+    getAll: async (): Promise<{ jobs: Job[]; message: string }> => {
         const response = await api.get('/jobs');
         return response.data;
     },
-    getById: async (id: string) => {
+    getById: async (
+        id: string
+    ): Promise<{ job: Job; message: string }> => {
         const response = await api.get(`/jobs/${id}`);
         return response.data;
     },
-    create: async (jobData: any) => {
-        const response = await api.post('/jobs', jobData);
+    create: async (
+        jobData: Omit<
+            Job,
+            '_id' | 'userId' | 'createdAt' | 'updatedAt'
+        >
+    ): Promise<{ job: Job; message: string }> => {
+        const response = await api.post('/jobs/create', jobData);
         return response.data;
     },
 };

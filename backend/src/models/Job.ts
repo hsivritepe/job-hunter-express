@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { Job as JobType } from '../types';
+import { Job as JobInterface } from '../types';
 
 export interface IJob
-    extends Omit<JobType, '_id' | 'createdAt' | 'updatedAt'>,
+    extends Omit<JobInterface, '_id' | 'createdAt' | 'updatedAt'>,
         Document {}
 
 const jobSchema = new Schema<IJob>(

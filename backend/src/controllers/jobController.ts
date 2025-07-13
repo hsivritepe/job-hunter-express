@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Job } from '../models/Job';
-import { Job as JobType } from '../types';
+import { Job as JobInterface } from '../types';
 import { IUser } from '../models/User';
 
 // Extend the Request interface to include user
