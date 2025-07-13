@@ -2,11 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { User, IUser } from '../models/User';
-
-// Extend the Request interface to include user
-interface AuthenticatedRequest extends Request {
-    user?: IUser;
-}
+import { AuthenticatedRequest } from '../middleware/auth';
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -81,18 +77,7 @@ export const changePassword = async (
 ) => {
     try {
         const { currentPassword, newPassword } = req.body;
-        const userId = req.user?._id;
-
-        if (!userId) {
-            return res
-                .status(401)
-                .json({ error: 'User not authenticated' });
-        }
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        const user = req.user; // No need to check - middleware guarantees user exists
 
         // Check current password
         const isMatch = await user.comparePassword(currentPassword);
@@ -118,18 +103,7 @@ export const updateUser = async (
 ) => {
     try {
         const { name, email } = req.body;
-        const userId = req.user?._id;
-
-        if (!userId) {
-            return res
-                .status(401)
-                .json({ error: 'User not authenticated' });
-        }
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        const user = req.user; // No need to check - middleware guarantees user exists
 
         // check if new email is already taken
         if (email && email !== user.email) {
@@ -165,18 +139,7 @@ export const updateProfile = async (
             profilePicture,
             socialLinks,
         } = req.body;
-        const userId = req.user?._id;
-
-        if (!userId) {
-            return res
-                .status(401)
-                .json({ error: 'User not authenticated' });
-        }
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        const user = req.user; // No need to check - middleware guarantees user exists
 
         // Update profile fields
         if (name) user.name = name;

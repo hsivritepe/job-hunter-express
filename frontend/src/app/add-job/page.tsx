@@ -44,8 +44,7 @@ const AddJobPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Implement job creation logic
-        console.log('Form submitted:', formData);
+        //console.log('Form submitted:', formData);
         const response = await jobAPI.create({
             ...formData,
             appliedDate: new Date(formData.appliedDate),
@@ -55,7 +54,7 @@ const AddJobPage = () => {
                       .filter((r) => r.trim())
                 : [],
         });
-        console.log('Job created:', response);
+        //console.log('Job created:', response);
 
         // Show notification and start countdown
         setShowNotification(true);

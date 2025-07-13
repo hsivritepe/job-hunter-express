@@ -1,12 +1,9 @@
 import { Request, Response } from 'express';
 import { Job } from '../models/Job';
-import { Job as JobInterface } from '../types';
-import { IUser } from '../models/User';
-
-// Extend the Request interface to include user
-interface AuthenticatedRequest extends Request {
-    user?: IUser;
-}
+import {
+    AuthenticatedRequest,
+    requireOwnership,
+} from '../middleware/auth';
 
 export const createJob = async (
     req: AuthenticatedRequest,
@@ -28,17 +25,8 @@ export const createJob = async (
             status,
         } = req.body;
 
-        // Get the authenticated user's ID
-        const userId = req.user?._id;
-
-        if (!userId) {
-            return res.status(401).json({
-                message: 'User not authenticated',
-            });
-        }
-
         const job = new Job({
-            userId: userId.toString(), // Convert ObjectId to string
+            userId: req.user._id?.toString() || '', // No need to check - middleware guarantees user exists
             title,
             description,
             company,
@@ -74,7 +62,9 @@ export const getJobs = async (
     res: Response
 ) => {
     try {
-        const jobs = await Job.find({ userId: req.user?._id });
+        const jobs = await Job.find({
+            userId: req.user._id?.toString(),
+        }); // No need to check - middleware guarantees user exists
         res.status(200).json({
             message: 'Jobs fetched successfully',
             jobs,
@@ -101,11 +91,20 @@ export const getJobById = async (
             });
         }
 
+        // Ensure user can only access their own jobs
+        requireOwnership(job.userId, req.user);
+
         res.status(200).json({
             message: 'Job fetched successfully',
             job,
         });
     } catch (error: any) {
+        if (error.message.includes('Access denied')) {
+            return res.status(403).json({
+                message:
+                    'Access denied: You can only access your own jobs',
+            });
+        }
         res.status(400).json({
             message: 'Failed to get job',
             error: error.message,

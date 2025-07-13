@@ -57,6 +57,15 @@ export interface Job {
     createdAt?: Date;
     updatedAt?: Date;
 }
+export interface Company {
+    _id?: string;
+    name: string;
+    description?: string;
+    website?: string;
+    location?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
 // Action interface
 export interface Action {

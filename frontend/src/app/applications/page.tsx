@@ -27,9 +27,9 @@ export default function ApplicationsPage() {
         try {
             setLoading(true);
             setError(null);
-            console.log('Fetching jobs...');
+            //console.log('Fetching jobs...');
             const { jobs, message } = await jobAPI.getAll();
-            console.log('Jobs fetched successfully:', jobs);
+            //console.log('Jobs fetched successfully:', jobs);
             setJobs(jobs);
         } catch (error) {
             console.error('Error fetching jobs:', error);
