@@ -46,18 +46,20 @@ export default function DashboardPage() {
                                             </svg>
                                         </div>
                                         <h3 className="text-lg font-medium text-gray-900 mb-2">
-                                            Search Jobs
+                                            Job Application
                                         </h3>
                                         <p className="text-gray-600 text-sm mb-4">
-                                            Browse and search for job
-                                            opportunities
+                                            Add a job application to
+                                            your applications
                                         </p>
-                                        <Button
-                                            size="sm"
-                                            className="w-full"
-                                        >
-                                            Browse Jobs
-                                        </Button>
+                                        <Link href="/add-job">
+                                            <Button
+                                                size="sm"
+                                                className="w-full"
+                                            >
+                                                Add Job Application
+                                            </Button>
+                                        </Link>
                                     </div>
 
                                     <div className="bg-white p-6 rounded-lg shadow-sm border">
