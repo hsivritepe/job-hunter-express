@@ -4,12 +4,18 @@ import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
+import { jobAPI } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 const AddJobPage = () => {
     const { user, logout } = useAuth();
+    const router = useRouter();
 
     // Get today's date in YYYY-MM-DD format for the date input
     const today = new Date().toISOString().split('T')[0];
+
+    const [showNotification, setShowNotification] = useState(false);
+    const [countdown, setCountdown] = useState(5);
 
     const [formData, setFormData] = useState({
         company: '',
@@ -22,6 +28,8 @@ const AddJobPage = () => {
         requirements: '',
         salary: '',
         notes: '',
+        type: 'full-time' as const,
+        status: 'open' as const,
     });
 
     const handleInputChange = (
@@ -38,11 +46,62 @@ const AddJobPage = () => {
         e.preventDefault();
         // TODO: Implement job creation logic
         console.log('Form submitted:', formData);
+        const response = await jobAPI.create({
+            ...formData,
+            appliedDate: new Date(formData.appliedDate),
+            requirements: formData.requirements
+                ? formData.requirements
+                      .split('\n')
+                      .filter((r) => r.trim())
+                : [],
+        });
+        console.log('Job created:', response);
+
+        // Show notification and start countdown
+        setShowNotification(true);
+        let count = 5;
+        const timer = setInterval(() => {
+            count--;
+            setCountdown(count);
+            if (count === 0) {
+                clearInterval(timer);
+                router.push('/applications');
+            }
+        }, 1000);
     };
 
     return (
         <ProtectedRoute>
             <div className="min-h-screen bg-gray-50">
+                {/* Success Notification */}
+                {showNotification && (
+                    <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50">
+                        <div className="flex items-center space-x-3">
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+                            <div>
+                                <p className="font-medium">
+                                    Job created successfully!
+                                </p>
+                                <p className="text-sm">
+                                    Redirecting to applications in{' '}
+                                    {countdown} seconds...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {/* Navigation */}
                 <Navigation user={user!} onSignOut={logout} />
                 <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
