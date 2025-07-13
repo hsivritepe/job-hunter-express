@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
 interface ProtectedRouteProps {
@@ -8,7 +9,14 @@ interface ProtectedRouteProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     children,
 }) => {
+    const router = useRouter();
     const { loading, user } = useAuth();
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push('/login');
+        }
+    }, [loading, user, router]);
 
     if (loading) {
         return (
@@ -19,7 +27,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
 
     if (!user) {
-        return null; // Router will handle redirect
+        return null; // Will redirect to login
     }
 
     return <>{children}</>;

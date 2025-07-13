@@ -13,7 +13,7 @@ export const useAuth = () => {
         const userData = localStorage.getItem('user');
 
         if (!token || !userData) {
-            router.push('/login');
+            setLoading(false);
             return;
         }
 
@@ -22,22 +22,28 @@ export const useAuth = () => {
             setUser(parsedUser);
         } catch (error) {
             console.error('Error parsing user data:', error);
-            router.push('/login');
+            setUser(null);
         } finally {
             setLoading(false);
         }
-    }, [router]);
+    }, []);
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        setUser(null);
         router.push('/');
+    };
+
+    const redirectToLogin = () => {
+        router.push('/login');
     };
 
     return {
         user,
         loading,
         logout,
+        redirectToLogin,
         isAuthenticated: !!user,
     };
 };
