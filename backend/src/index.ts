@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import jobRoutes from './routes/jobRoutes';
 import actionRoutes from './routes/actionRoutes';
+import { seedActionTemplates } from './seedActionTemplates';
 
 // Load environment variables
 dotenv.config();
@@ -22,8 +23,10 @@ mongoose
         process.env.MONGODB_URI ||
             'mongodb://localhost:27017/job-hunter'
     )
-    .then(() => {
+    .then(async () => {
         console.log('Connected to MongoDB');
+        // Seed action templates
+        await seedActionTemplates();
     })
     .catch((error) => {
         console.error('MongoDB connection error:', error);

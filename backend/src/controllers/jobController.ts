@@ -4,11 +4,9 @@ import {
     AuthenticatedRequest,
     requireOwnership,
 } from '../middleware/auth';
+import { addDefaultActionsToJob } from './actionController';
 
-export const createJob = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const createJob = async (req: Request, res: Response) => {
     try {
         const {
             title,
@@ -25,8 +23,10 @@ export const createJob = async (
             status,
         } = req.body;
 
+        const user = (req as AuthenticatedRequest).user; // Type assertion after middleware
+
         const job = new Job({
-            userId: req.user._id?.toString() || '', // No need to check - middleware guarantees user exists
+            userId: user._id?.toString() || '', // No need to check - middleware guarantees user exists
             title,
             description,
             company,
@@ -45,6 +45,13 @@ export const createJob = async (
 
         await job.save();
 
+        // Add default actions to the job
+        await addDefaultActionsToJob(
+            job._id?.toString() || '',
+            user._id?.toString() || '',
+            job.appliedDate
+        );
+
         res.status(201).json({
             message: 'Job created successfully',
             job,
@@ -57,13 +64,11 @@ export const createJob = async (
     }
 };
 
-export const getJobs = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const getJobs = async (req: Request, res: Response) => {
     try {
+        const user = (req as AuthenticatedRequest).user; // Type assertion after middleware
         const jobs = await Job.find({
-            userId: req.user._id?.toString(),
+            userId: user._id?.toString(),
         }); // No need to check - middleware guarantees user exists
         res.status(200).json({
             message: 'Jobs fetched successfully',
@@ -77,12 +82,10 @@ export const getJobs = async (
     }
 };
 
-export const getJobById = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const getJobById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
+        const user = (req as AuthenticatedRequest).user; // Type assertion after middleware
         const job = await Job.findById(id);
 
         if (!job) {
@@ -92,7 +95,7 @@ export const getJobById = async (
         }
 
         // Ensure user can only access their own jobs
-        requireOwnership(job.userId, req.user);
+        requireOwnership(job.userId, user);
 
         res.status(200).json({
             message: 'Job fetched successfully',

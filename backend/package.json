@@ -9,7 +9,8 @@
         "build": "tsc",
         "lint": "eslint . --ext .ts",
         "test": "jest",
-        "test:basic": "ts-node src/__tests__/basic.test.ts"
+        "test:basic": "ts-node src/__tests__/basic.test.ts",
+        "seed": "ts-node src/seedActionTemplates.ts"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",

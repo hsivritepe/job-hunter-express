@@ -1,11 +1,8 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { Company } from '../models/Company';
 import { AuthenticatedRequest } from '../middleware/auth';
 
-export const createCompany = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const createCompany = async (req: Request, res: Response) => {
     try {
         const { name, description, website, location } = req.body;
         const company = new Company({
@@ -14,15 +11,15 @@ export const createCompany = async (
             website,
             location,
         });
+
+        await company.save();
+        res.status(201).json(company);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 };
 
-export const getCompanyById = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const getCompanyById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const company = await Company.findById(id);
@@ -37,10 +34,7 @@ export const getCompanyById = async (
     }
 };
 
-export const updateCompany = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const updateCompany = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const { name, description, website, location } = req.body;

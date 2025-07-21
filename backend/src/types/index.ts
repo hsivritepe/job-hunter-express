@@ -68,27 +68,37 @@ export interface Company {
     updatedAt?: Date;
 }
 
+// Action Template interface
+export interface ActionTemplate {
+    _id?: string;
+    name: string;
+    description: string;
+    category:
+        | 'application'
+        | 'interview'
+        | 'response'
+        | 'follow-up'
+        | 'other';
+    isDefault: boolean;
+    color?: string;
+    icon?: string;
+    order: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 // Action interface
 export interface Action {
     _id?: string;
     jobId: string;
     userId: string;
-    type:
-        | 'follow-up'
-        | 'phone-interview'
-        | 'coding-interview'
-        | 'onsite-interview'
-        | 'offer'
-        | 'rejected'
-        | 'accepted'
-        | 'declined'
-        | 'withdrawn'
-        | 'other';
-    title: string;
-    description?: string;
+    templateId: string;
+    templateName: string;
     date: Date;
-    status: 'pending' | 'completed' | 'cancelled';
     notes?: string;
+    status: 'pending' | 'completed' | 'cancelled';
+    scheduledDate?: Date;
+    completedDate?: Date;
     createdAt?: Date;
     updatedAt?: Date;
 }

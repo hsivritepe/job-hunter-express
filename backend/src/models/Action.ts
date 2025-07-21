@@ -1,26 +1,76 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+// Action Template - predefined action types that can be applied to jobs
+export interface IActionTemplate extends Document {
+    name: string;
+    description: string;
+    category:
+        | 'application'
+        | 'interview'
+        | 'response'
+        | 'follow-up'
+        | 'other';
+    isDefault: boolean; // Whether this action is automatically added to new jobs
+    color?: string; // For UI display
+    icon?: string; // For UI display
+    order: number; // For sorting in UI
+}
+
+const actionTemplateSchema = new Schema<IActionTemplate>(
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true,
+        },
+        description: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        category: {
+            type: String,
+            enum: [
+                'application',
+                'interview',
+                'response',
+                'follow-up',
+                'other',
+            ],
+            required: true,
+        },
+        isDefault: {
+            type: Boolean,
+            default: false,
+        },
+        color: {
+            type: String,
+            trim: true,
+        },
+        icon: {
+            type: String,
+            trim: true,
+        },
+        order: {
+            type: Number,
+            default: 0,
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
+// Action Instance - an action template applied to a specific job
 export interface IAction extends Document {
     jobId: string;
     userId: string;
-    type:
-        | 'follow-up'
-        | 'phone-interview'
-        | 'coding-interview'
-        | 'onsite-interview'
-        | 'offer'
-        | 'rejected'
-        | 'accepted'
-        | 'declined'
-        | 'withdrawn'
-        | 'other';
-    title: string;
-    description?: string;
+    templateId: mongoose.Types.ObjectId; // Reference to ActionTemplate
+    templateName: string; // Denormalized for easier queries
     date: Date;
-    status: 'pending' | 'completed' | 'cancelled';
     notes?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    scheduledDate?: Date; // For future actions like interviews
 }
 
 const actionSchema = new Schema<IAction>(
@@ -33,30 +83,14 @@ const actionSchema = new Schema<IAction>(
             type: String,
             required: true,
         },
-        type: {
-            type: String,
-            enum: [
-                'follow-up',
-                'phone-interview',
-                'coding-interview',
-                'onsite-interview',
-                'offer',
-                'rejected',
-                'accepted',
-                'declined',
-                'withdrawn',
-                'other',
-            ],
+        templateId: {
+            type: Schema.Types.ObjectId,
+            ref: 'ActionTemplate',
             required: true,
         },
-        title: {
+        templateName: {
             type: String,
             required: true,
-            trim: true,
-        },
-        description: {
-            type: String,
-            required: false,
             trim: true,
         },
         date: {
@@ -64,15 +98,12 @@ const actionSchema = new Schema<IAction>(
             required: true,
             default: Date.now,
         },
-        status: {
-            type: String,
-            enum: ['pending', 'completed', 'cancelled'],
-            default: 'pending',
-        },
         notes: {
             type: String,
-            required: false,
             trim: true,
+        },
+        scheduledDate: {
+            type: Date,
         },
     },
     {
@@ -80,8 +111,13 @@ const actionSchema = new Schema<IAction>(
     }
 );
 
-// Index for efficient queries
+// Indexes for efficient queries
 actionSchema.index({ jobId: 1, date: -1 });
 actionSchema.index({ userId: 1, date: -1 });
+actionSchema.index({ templateId: 1 });
 
+export const ActionTemplate = mongoose.model<IActionTemplate>(
+    'ActionTemplate',
+    actionTemplateSchema
+);
 export const Action = mongoose.model<IAction>('Action', actionSchema);

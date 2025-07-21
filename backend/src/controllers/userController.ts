@@ -71,13 +71,10 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-export const changePassword = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const changePassword = async (req: Request, res: Response) => {
     try {
         const { currentPassword, newPassword } = req.body;
-        const user = req.user; // No need to check - middleware guarantees user exists
+        const user = (req as AuthenticatedRequest).user; // Type assertion after middleware
 
         // Check current password
         const isMatch = await user.comparePassword(currentPassword);
@@ -97,13 +94,10 @@ export const changePassword = async (
     }
 };
 
-export const updateUser = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const updateUser = async (req: Request, res: Response) => {
     try {
         const { name, email } = req.body;
-        const user = req.user; // No need to check - middleware guarantees user exists
+        const user = (req as AuthenticatedRequest).user; // Type assertion after middleware
 
         // check if new email is already taken
         if (email && email !== user.email) {
@@ -126,10 +120,7 @@ export const updateUser = async (
     }
 };
 
-export const updateProfile = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const updateProfile = async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -139,7 +130,7 @@ export const updateProfile = async (
             profilePicture,
             socialLinks,
         } = req.body;
-        const user = req.user; // No need to check - middleware guarantees user exists
+        const user = (req as AuthenticatedRequest).user; // Type assertion after middleware
 
         // Update profile fields
         if (name) user.name = name;
@@ -164,24 +155,23 @@ export const updateProfile = async (
     }
 };
 
-export const getProfile = async (
-    req: AuthenticatedRequest,
-    res: Response
-) => {
+export const getProfile = async (req: Request, res: Response) => {
     try {
-        const userId = req.user?._id;
+        const user = (req as AuthenticatedRequest).user; // Type assertion after middleware
+        const userId = user._id;
+
         if (!userId) {
             return res
                 .status(401)
                 .json({ error: 'User not authenticated' });
         }
 
-        const user = await User.findById(userId);
-        if (!user) {
+        const userDoc = await User.findById(userId);
+        if (!userDoc) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        res.json({ user });
+        res.json({ user: userDoc });
     } catch (error) {
         console.error('Profile retrieval error:', error);
         res.status(400).json({ error: 'Error retrieving profile' });
